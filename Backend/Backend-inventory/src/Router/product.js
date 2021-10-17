@@ -21,6 +21,7 @@ router.post('/create/product' , auth , async (req , res)=>{
         product.productName = req.body.productName
         product.quantity = req.body.quantity
         product.rate = req.body.rate
+
         product.productStatus = req.body.productStatus
 
         await product.save()

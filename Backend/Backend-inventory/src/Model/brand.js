@@ -9,11 +9,16 @@ const userSchema = mongoose.Schema({
         required:true,
         trim:true
     },
+    brandImage :{
+        type : String,
+        required:true,
+        trim:true
+    },
     category : [
             {
         type : mongoose.Schema.Types.ObjectId,
-        ref:'Category'
-        // trim:true
+        ref:'Category',
+        trim:true
     }
     ],
     brandStatus :{

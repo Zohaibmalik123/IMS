@@ -37,9 +37,28 @@ router.post('/create-category', auth, async (req, res) => {
 
 })
 router.get('/get-all-category' ,auth  , async (req , res)=>{
-    try{
-        const category = await Category.find({})
-        res.send(category)
+    try {
+        let categories = await Category.find({parentCategory: {$exists: false}})
+        const responseCategories = await Promise.all(categories.map(async (category) => {
+            subCategories = await Category.find({parentCategory: category._id})
+            subCategories1 = await Promise.all(subCategories.map(async (category) => {
+                subCategories = await Category.find({parentCategory: category._id})
+                return {
+                    _id: category._id,
+                    categoryName: category.categoryName,
+                    categoryStatus: category.categoryStatus,
+                    subCategories: subCategories
+                }
+            }))
+
+            return {
+                _id: category._id,
+                categoryName: category.categoryName,
+                categoryStatus: category.categoryStatus,
+                subCategories: subCategories1
+            }
+        }))
+        res.send(responseCategories);
     } catch (e) {
         res.status(500).send(e)
     }
